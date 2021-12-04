@@ -1,0 +1,1 @@
+export const FETCH_POST_LIMIT = 15;
