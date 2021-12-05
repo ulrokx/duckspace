@@ -23,7 +23,7 @@ interface PostMenuButtonProps {
     onEdit: Function;
 }
 
-export const PostMenuButton: React.FC<PostMenuButtonProps> = ({
+export const PostActionsDropdownMenu: React.FC<PostMenuButtonProps> = ({
     post: p,
     onEdit,
 }) => {
@@ -43,7 +43,7 @@ export const PostMenuButton: React.FC<PostMenuButtonProps> = ({
                     Actions
                 </MenuButton>
                 <MenuList>
-                    {data.me?.id === p.post.creator.id ? (
+                    {data?.me?.id === p.post.creator.id ? (
                         <>
                             <MenuItem
                                 onClick={() => {

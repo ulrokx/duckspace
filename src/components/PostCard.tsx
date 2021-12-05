@@ -20,7 +20,9 @@ export const PostCard: React.FC<PostInfo> = ({ post: p }) => {
                     <NextLink href={`/post/[id]`} as={`/post/${p.id}`}>
                         <Heading as={Link} fontSize="2xl">{p.title}</Heading>
                     </NextLink>
-                    <Text>{p.creator.username}</Text>
+                    <NextLink href={`/duck/[id]`} as={`/duck/${p.creator.id}`}>
+                    <Text as={Link}>{p.creator.username}</Text>
+                    </NextLink>
                     <Text mt={4}>{p.textSnippet}</Text>
                 </Box>
             </Flex>

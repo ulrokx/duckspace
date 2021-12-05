@@ -1,0 +1,14 @@
+query GetUser($uuid: String!) {
+    getUser(uuid: $uuid) {
+        username
+        updatedAt
+        createdAt
+        id
+        about
+        posts {
+            title
+            textSnippet
+            points
+        }
+    }
+}

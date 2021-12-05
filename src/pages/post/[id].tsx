@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
-import { PostMenuButton } from "../../components/PostMenuButton";
+import { PostActionsDropdownMenu } from "../../components/PostActionsDropdownMenu";
 import { PostPointsDisplay } from "../../components/PostPointsDisplay";
 import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
 import { createURQLClient } from "../../utils/createURQLClient";
@@ -18,7 +18,7 @@ const Post: React.FC = ({}) => {
     const [edit, setEdit] = useState(false);
     // const postId = getQueryParam({param: "id", isid: true})    queryP =
         const postId = typeof router.query.id === "string" 
-            ? parseInt(router.query.id as string, 10)
+            ? router.query.id
             : -1;
     const [{ data, fetching, error }] = usePostQuery({
         pause: postId === -1,
@@ -80,7 +80,7 @@ const Post: React.FC = ({}) => {
                         </Box>
                         <Box width="auto">
                             {!edit ? (
-                                <PostMenuButton
+                                <PostActionsDropdownMenu
                                     post={data}
                                     onEdit={() => {
                                         setEdit(true);

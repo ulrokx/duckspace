@@ -4,6 +4,7 @@ import React from "react";
 import NextLink from "next/link";
 import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
+import { NavBarDropdownMenu } from "./NavBarDropdownMenu";
 
 export const NavBar: React.FC = ({}) => {
     const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
@@ -20,38 +21,25 @@ export const NavBar: React.FC = ({}) => {
         body = (
             <>
                 <NextLink href="/login">
-                    <Link mr={4}>login</Link>
+                    <Button mr={4}>login</Button>
                 </NextLink>
                 <NextLink href="/register">
-                    <Link>register</Link>
+                    <Button>register</Button>
                 </NextLink>
             </>
         );
     } else {
-        //user is logged in
-        body = (
-            <Flex>
-                <Box>{data.me.username}</Box>
-                <Button
-                    variant="link"
-                    ml={4}
-                    onClick={() => {
-                        logout();
-                    }}
-                    isLoading={logoutFetching}
-                >
-                    logout
-                </Button>
-            </Flex>
-        );
+        body = <NavBarDropdownMenu />
     }
-
     return (
-        <Flex bg="teal" position="sticky" top={0} zIndex={100} p={4}>
+        <Flex bg="red.300" position="sticky" top={0} zIndex={100} p={4} justifyContent="space-between" alignContent="center">
             <NextLink href="/">
-                <Link>home</Link>
+                <Link fontSize="3xl" fontWeight="bold">Duckscape</Link>
             </NextLink>
-            <Box ml="auto">{body}</Box>
+            <Box>
+                {body}
+</Box>
         </Flex>
     );
+    
 };
