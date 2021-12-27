@@ -111,11 +111,17 @@ export type PostInput = {
 
 export type Query = {
   __typename?: 'Query';
+  getQuacks: Scalars['Int'];
   getUser: User;
   hello: Scalars['String'];
   me?: Maybe<User>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
+};
+
+
+export type QueryGetQuacksArgs = {
+  uuid: Scalars['String'];
 };
 
 
@@ -136,11 +142,11 @@ export type QueryPostsArgs = {
 
 export type User = {
   __typename?: 'User';
-  about: Scalars['String'];
+  about?: Maybe<Scalars['String']>;
+  accQuacks?: Maybe<Scalars['Float']>;
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['String'];
-  postCount: Scalars['Int'];
   posts: Array<Post>;
   updatedAt: Scalars['String'];
   username: Scalars['String'];
@@ -236,7 +242,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', username: string, updatedAt: string, createdAt: string, id: string, about: string, posts: Array<{ __typename?: 'Post', title: string, textSnippet: string, points: number }> } };
+export type GetUserQuery = { __typename?: 'Query', getUser: { __typename?: 'User', username: string, updatedAt: string, createdAt: string, id: string, about?: string | null | undefined, accQuacks?: number | null | undefined, posts: Array<{ __typename?: 'Post', id: string, createdAt: string, updatedAt: string, title: string, points: number, textSnippet: string, voteStatus?: number | null | undefined, creator?: { __typename?: 'User', username: string, id: string } | null | undefined }> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -404,14 +410,13 @@ export const GetUserDocument = gql`
     createdAt
     id
     about
+    accQuacks
     posts {
-      title
-      textSnippet
-      points
+      ...PostSnippet
     }
   }
 }
-    `;
+    ${PostSnippetFragmentDoc}`;
 
 export function useGetUserQuery(options: Omit<Urql.UseQueryArgs<GetUserQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetUserQuery>({ query: GetUserDocument, ...options });

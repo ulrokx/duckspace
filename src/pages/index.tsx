@@ -39,8 +39,8 @@ const Index = () => {
                 <div>loading</div>
             ) : (
                 <Stack spacing={8} mx={3}>
-                    {data!.posts.posts.map((p) =>
-                        !p ? null : <PostCard post={p} />
+                    {data!.posts.posts.map((p, id) =>
+                        !p ? null : <PostCard post={p} key={id}/>
                     )}
                 </Stack>
             )}

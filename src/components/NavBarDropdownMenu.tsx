@@ -2,13 +2,12 @@ import { Button } from '@chakra-ui/button';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Link } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu'
-import NextLink from 'next/link'
 import React from 'react'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 import { isServer } from '../utils/isServer';
 import {CgProfile, CgBookmark} from 'react-icons/cg'
 import { GiExitDoor } from 'react-icons/gi';
-
+import NextLink from 'next/link'
 
 export const NavBarDropdownMenu: React.FC= ({}) => {
     const [{data, fetching}] = useMeQuery({
@@ -34,9 +33,12 @@ export const NavBarDropdownMenu: React.FC= ({}) => {
                 {data.me.username}
             </MenuButton>
             <MenuList>
-                <MenuItem icon={<CgProfile />}>
+                <NextLink href={`/duck/${data.me.id}/posts`}>
+                <MenuItem icon={<CgProfile />} onClick={() => {
+                }}>
                     My Profile
                 </MenuItem>
+                </NextLink>
                 <MenuItem icon={<CgBookmark />}>
                     Saved Posts
                 </MenuItem>

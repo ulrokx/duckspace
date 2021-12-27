@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button";
-import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
@@ -11,6 +11,7 @@ import { PostPointsDisplay } from "../../components/PostPointsDisplay";
 import { usePostQuery, useUpdatePostMutation } from "../../generated/graphql";
 import { createURQLClient } from "../../utils/createURQLClient";
 import getQueryParam from "../../utils/getQueryParam";
+import NextLink from 'next/link'
 //todo fix when post is not found
 const Post: React.FC = ({}) => {
     const [{fetching: uFetching }, updatePost] = useUpdatePostMutation()
@@ -23,7 +24,7 @@ const Post: React.FC = ({}) => {
     const [{ data, fetching, error }] = usePostQuery({
         pause: postId === -1,
         variables: {
-            id: postId as number,
+            id: postId as string,
         },
     });
     if (fetching) {
@@ -52,9 +53,11 @@ const Post: React.FC = ({}) => {
                                         <Heading fontSize="xl">
                                             {data.post.title}
                                         </Heading>
-                                        <Text>
+                                        <NextLink href={`/duck/[id]`} as={`/duck/${data.post.creator.id}`}>
+                                        <Link>
                                             {data.post.creator.username}
-                                        </Text>
+                                        </Link>
+                                        </ NextLink>
                                         {!edit ? (
                                             <Text mt={4}>{data.post.text}</Text>
                                         ) : (

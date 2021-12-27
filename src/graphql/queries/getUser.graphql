@@ -5,10 +5,9 @@ query GetUser($uuid: String!) {
         createdAt
         id
         about
+        accQuacks
         posts {
-            title
-            textSnippet
-            points
+            ...PostSnippet
         }
     }
 }
