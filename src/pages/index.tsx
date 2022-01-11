@@ -21,10 +21,6 @@ const Index = () => {
         },
     });
 
-    useEffect(() => {
-        console.log("variables:", variables);
-    }, [variables]);
-
     if (!fetching && !data) {
         return <div>{error?.message}</div>;
     }

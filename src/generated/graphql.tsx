@@ -13,6 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any;
 };
 
 export type FieldError = {
@@ -30,7 +32,7 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
-  savePost: Scalars['Boolean'];
+  savePost: Post;
   updatePost?: Maybe<Post>;
   vote: Scalars['Boolean'];
 };
@@ -113,10 +115,10 @@ export type Query = {
   __typename?: 'Query';
   getQuacks: Scalars['Int'];
   getUser: User;
-  hello: Scalars['String'];
   me?: Maybe<User>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
+  saved: Array<Saved>;
 };
 
 
@@ -138,6 +140,16 @@ export type QueryPostArgs = {
 export type QueryPostsArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   limit: Scalars['Int'];
+};
+
+export type Saved = {
+  __typename?: 'Saved';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  post: Post;
+  postId: Scalars['String'];
+  user: User;
+  userId: Scalars['String'];
 };
 
 export type User = {
@@ -221,6 +233,13 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, username: string } | null | undefined } };
 
+export type SavePostMutationVariables = Exact<{
+  postId: Scalars['String'];
+}>;
+
+
+export type SavePostMutation = { __typename?: 'Mutation', savePost: { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, title: string, points: number, textSnippet: string, voteStatus?: number | null | undefined, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } };
+
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['String'];
   text: Scalars['String'];
@@ -254,7 +273,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, voteStatus?: number | null | undefined, title: string, text?: string, points: number, creator?: { __typename?: 'User', id: string, username: string } | null | undefined } | null | undefined };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, voteStatus?: number | null | undefined, title: string, text: string, points: number, creator?: { __typename?: 'User', id: string, username: string } | null | undefined } | null | undefined };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -263,6 +282,11 @@ export type PostsQueryVariables = Exact<{
 
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: string, createdAt: string, updatedAt: string, title: string, points: number, textSnippet: string, voteStatus?: number | null | undefined, creator?: { __typename?: 'User', username: string, id: string } | null | undefined }> } };
+
+export type SavedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SavedQuery = { __typename?: 'Query', saved: Array<{ __typename?: 'Saved', post: { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, title: string, points: number, textSnippet: string, voteStatus?: number | null | undefined, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } }> };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -379,6 +403,17 @@ export const RegisterDocument = gql`
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
 };
+export const SavePostDocument = gql`
+    mutation SavePost($postId: String!) {
+  savePost(postId: $postId) {
+    ...PostSnippet
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+export function useSavePostMutation() {
+  return Urql.useMutation<SavePostMutation, SavePostMutationVariables>(SavePostDocument);
+};
 export const UpdatePostDocument = gql`
     mutation UpdatePost($id: String!, $text: String!) {
   updatePost(id: $id, text: $text) {
@@ -466,4 +501,17 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostsQuery>({ query: PostsDocument, ...options });
+};
+export const SavedDocument = gql`
+    query Saved {
+  saved {
+    post {
+      ...PostSnippet
+    }
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+export function useSavedQuery(options: Omit<Urql.UseQueryArgs<SavedQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<SavedQuery>({ query: SavedDocument, ...options });
 };

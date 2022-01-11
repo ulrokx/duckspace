@@ -8,10 +8,8 @@ export const useIsMe = () => {
     let isMe = false
     useEffect(() => {
         if(!fetching && !(router.query.id == data.me?.id)) {
-            console.log("fetching", fetching, "router", router)
             router.replace(`/duck/${router.query.id}/posts`)
         } else if (!fetching && router.query.id == data.me?.id) {
-            console.log("true")
             isMe = true
         }
             

@@ -100,4 +100,4 @@ const Post: React.FC = ({}) => {
     }
 };
 
-export default withUrqlClient(createURQLClient, { ssr: true })(Post);
+export default withUrqlClient(createURQLClient,)(Post);

@@ -1,5 +1,10 @@
 import { dedupExchange, fetchExchange, stringifyVariables } from "@urql/core";
-import { cacheExchange, Entity, Resolver } from "@urql/exchange-graphcache";
+import {
+    cacheExchange,
+    Data,
+    Entity,
+    Resolver,
+} from "@urql/exchange-graphcache";
 import Router from "next/router";
 import { Exchange } from "urql";
 import { pipe, tap } from "wonka";
@@ -10,9 +15,15 @@ import {
     LogoutMutation,
     MeDocument,
     MeQuery,
+    MutationSavePostArgs,
     MutationUpdatePostArgs,
     PostsQuery,
     RegisterMutation,
+    Saved,
+    SavedDocument,
+    SavedQuery,
+    SavePostMutation,
+    SavePostMutationVariables,
     VoteMutation,
     VoteMutationVariables,
 } from "../generated/graphql";
@@ -108,6 +119,33 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                 },
                 updates: {
                     Mutation: {
+                        savePost: (
+                            result: SavePostMutation,
+                            args,
+                            cache,
+                            info
+                        ) => {
+                            console.log("saved posts firing")
+                            betterUpdateQuery<SavePostMutation, SavedQuery>(
+                                cache,
+                                { query: SavedDocument },
+                                result,
+                                (result, query) => {
+                                    console.log("savedresult:", result, "savedquery:", query)
+                                    const newQuery = {
+                                        ...query,
+                                        saved: [
+                                            ...query.saved,
+                                            {
+                                                __typename: "Saved" as const,
+                                                post: result.savePost,
+                                            },
+                                        ],
+                                    };
+                                    return newQuery
+                                }
+                            );
+                        },
                         updatePost: (_result, args, cache, info) => {
                             const { text: newtext, id } =
                                 args as MutationUpdatePostArgs;
@@ -137,7 +175,7 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                         vote: (_result, args, cache, info) => {
                             let { postId, value } =
                                 args as VoteMutationVariables;
-                            console.log("value:", value)
+                            console.log("value:", value);
                             const data = cache.readFragment(
                                 gql`
                                     fragment _ on Post {
@@ -201,6 +239,7 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                                 { query: MeDocument },
                                 _result,
                                 (result, query) => {
+                                    // console.log("result:", result, "query:", query)
                                     if (result.login.errors) {
                                         return query;
                                     } else {

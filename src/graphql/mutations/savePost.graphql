@@ -1,0 +1,5 @@
+mutation SavePost($postId: String!) {
+    savePost(postId: $postId) {
+        ...PostSnippet
+    }
+}

@@ -15,6 +15,7 @@ import {
     PostQuery,
     useDeletePostMutation,
     useMeQuery,
+    useSavePostMutation,
 } from "../generated/graphql";
 import { DeletePostDialog } from "./DeletePostDialog";
 
@@ -31,6 +32,7 @@ export const PostActionsDropdownMenu: React.FC<PostMenuButtonProps> = ({
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [{ fetching: dFetching }, deletePost] = useDeletePostMutation();
     const router = useRouter();
+    const [{fetching: saveFetching},savePost] = useSavePostMutation()
 
     return (
         <>
@@ -61,10 +63,10 @@ export const PostActionsDropdownMenu: React.FC<PostMenuButtonProps> = ({
                             </MenuItem>{" "}
                         </>
                     ) : null}
-                    {data.me !== null ? (
+                    {data?.me !== null ? (
                         <>
                             {" "}
-                            <MenuItem>Save for later</MenuItem> <MenuDivider />
+                            <MenuItem onClick={() => savePost({postId: p.post.id})}>Save for later</MenuItem> <MenuDivider />
                         </>
                     ) : null}
                     <MenuItem>Copy link to clipboard</MenuItem>
