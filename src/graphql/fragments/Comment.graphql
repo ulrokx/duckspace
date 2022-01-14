@@ -1,0 +1,14 @@
+fragment CommentFields on Comment {
+    id
+    createdAt
+    updatedAt
+    text
+    creatorId
+    creator {
+        username
+        id
+    }
+    parentId
+    postId
+    isDeleted
+}

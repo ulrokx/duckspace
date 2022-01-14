@@ -1,0 +1,17 @@
+query GetComments($postId: String!) {
+    getComments(postId: $postId) {
+        ...CommentResp
+        children {
+            ...CommentResp
+            children {
+                ...CommentResp
+                children {
+                    ...CommentResp
+                    children {
+                        ...CommentResp
+                    }
+                }
+            }
+        }
+    }
+}

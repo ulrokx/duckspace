@@ -111,6 +111,7 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
             cacheExchange({
                 keys: {
                     PaginatedPosts: () => null,
+                    CommentResponse: () => null //maybe dont do thhis TODO
                 },
                 resolvers: {
                     Query: {

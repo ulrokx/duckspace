@@ -44,7 +44,7 @@ export const NavBarDropdownMenu: React.FC= ({}) => {
                         Saved Posts
                     </MenuItem>
                 </NextLink>
-                <MenuItem icon={<GiExitDoor />} onClick={() => logout()} isLoading={fetching}>
+                <MenuItem icon={<GiExitDoor />} onClick={() => logout()} >
                     Logout
                 </MenuItem>
             </MenuList>

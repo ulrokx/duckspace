@@ -1,0 +1,6 @@
+fragment CommentResp on CommentResponse {
+    comment {
+        ...CommentFields
+    }
+    hasMore
+}
