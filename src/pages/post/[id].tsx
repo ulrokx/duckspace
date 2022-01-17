@@ -16,14 +16,19 @@ import {
 import { createURQLClient } from "../../utils/createURQLClient";
 import getQueryParam from "../../utils/getQueryParam";
 import NextLink from "next/link";
-import {CommentCard} from "../../components/CommentCard"
+import { CommentCard } from "../../components/CommentCard";
 import { CommentStack } from "../../components/CommentStack";
-//todo fix when post is not found
+import validator from "validator";
 const Post: React.FC = ({}) => {
     const [{ fetching: uFetching }, updatePost] = useUpdatePostMutation();
     const router = useRouter();
     const [edit, setEdit] = useState(false);
-    const postId = typeof router.query.id === "string" ? router.query.id : "-1";
+    let postId = null;
+    if (router.query.id) {
+        postId = validator.isUUID(router.query.id as any)
+            ? router.query.id
+            : "-1";
+    }
     const [{ data, fetching, error }] = usePostQuery({
         pause: postId === "-1",
         variables: {
@@ -38,18 +43,18 @@ const Post: React.FC = ({}) => {
             },
         });
     let comments: ReactElement;
-    if(cfetching) {
-        comments = <p>loading comments...</p>
+    if (cfetching) {
+        comments = <p>loading comments...</p>;
     }
-    if(cerror) {
-        comments = <p>{cerror.message}</p>
+    if (cerror) {
+        comments = <p>{cerror.message}</p>;
     }
-    if(!cfetching && !error){
-        if(!cdata) {
-            comments = <p>there are no comments on this post</p>
+    if (!cfetching && !error) {
+        if (!cdata) {
+            comments = <p>there are no comments on this post</p>;
         } else {
-            console.log(cdata.getComments)
-            comments = <CommentStack comments={cdata.getComments}/>
+            console.log(cdata.getComments);
+            comments = <CommentStack comments={cdata.getComments} />;
         }
     }
     if (fetching) {
@@ -64,8 +69,14 @@ const Post: React.FC = ({}) => {
         } else {
             return (
                 <Layout showNav>
-                    {" "}
-                    <Box key={data.post.id} borderWidth="1px" shadow="md" p={3} mb={4}>
+                    <Box
+                        key={data.post.id}
+                        borderWidth="1px"
+                        shadow="md"
+                        sx={data.post.savedStatus ? { boxShadow: '0px 0px 3px 3px var(--chakra-colors-green-500)' } : ""}
+                        p={3}
+                        mb={4}
+                    >
                         <Flex justifyContent="space-between">
                             <PostPointsDisplay post={data.post} />
                             <Box display="block" flex={1}>
@@ -126,9 +137,15 @@ const Post: React.FC = ({}) => {
                                         }}
                                     />
                                 ) : null}
+                                {data.post.savedStatus ?
+                                <Box pos="relative" bottom="32px" right="69px" fontWeight="bold" color="green.700" fontSize="1.1em" letterSpacing="1px" userSelect="none">
+                                    SAVED
+                                </Box> : null
+        }
                             </Box>
                         </Flex>
                     </Box>
+                    <Text>{data.post.savedStatus ? data.post.savedStatus : "nope"}</Text>
                     <>{comments}</>
                 </Layout>
             );

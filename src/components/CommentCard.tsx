@@ -20,7 +20,7 @@ export const CommentCard: React.FC<CommentInfo> = ({ comment: c, depth}) => {
             <Flex>
                 <Box display="flex" flexDirection="column">
                     <NextLink href={`/duck/[id]`} as={`/duck/${c.comment.creatorId}`}>
-                        <Heading as={Link} fontSize="2xl">username</Heading>
+                        <Heading as={Link} fontSize="2xl">{c.comment.creator.username}</Heading>
                     </NextLink>
                     <Text mt={4}>{c.comment.text}</Text>
                 </Box>
