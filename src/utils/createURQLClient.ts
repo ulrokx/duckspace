@@ -126,13 +126,11 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                             cache,
                             info
                         ) => {
-                            console.log("saved posts firing")
                             betterUpdateQuery<SavePostMutation, SavedQuery>(
                                 cache,
                                 { query: SavedDocument },
                                 result,
                                 (result, query) => {
-                                    console.log("savedresult:", result, "savedquery:", query)
                                     const newQuery = {
                                         ...query,
                                         saved: [
@@ -176,7 +174,6 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                         vote: (_result, args, cache, info) => {
                             let { postId, value } =
                                 args as VoteMutationVariables;
-                            console.log("value:", value);
                             const data = cache.readFragment(
                                 gql`
                                     fragment _ on Post {
@@ -187,7 +184,6 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                                 `,
                                 { id: postId } as any
                             );
-                            // console.log("data: ", data)
                             if (data) {
                                 let newPoints: number;
                                 if (data.voteStatus == value) {
@@ -240,7 +236,6 @@ export const createURQLClient = (ssrExchange: any, ctx: any) => {
                                 { query: MeDocument },
                                 _result,
                                 (result, query) => {
-                                    // console.log("result:", result, "query:", query)
                                     if (result.login.errors) {
                                         return query;
                                     } else {

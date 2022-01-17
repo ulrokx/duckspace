@@ -38,9 +38,9 @@ export type CommentInput = {
 
 export type CommentResponse = {
   __typename?: 'CommentResponse';
-  children: Array<CommentResponse>;
-  comment: Comment;
-  hasMore: Scalars['Boolean'];
+  children?: Maybe<Array<CommentResponse>>;
+  comment?: Maybe<Comment>;
+  hasMore?: Maybe<Scalars['Boolean']>;
 };
 
 export type FieldError = {
@@ -140,6 +140,7 @@ export type PaginatedPosts = {
 
 export type Post = {
   __typename?: 'Post';
+  comments?: Maybe<Array<CommentResponse>>;
   createdAt: Scalars['String'];
   creator?: Maybe<User>;
   creatorId: Scalars['String'];
@@ -160,18 +161,12 @@ export type PostInput = {
 
 export type Query = {
   __typename?: 'Query';
-  getComments: Array<CommentResponse>;
   getQuacks: Scalars['Int'];
   getUser: User;
   me?: Maybe<User>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
   saved: Array<Saved>;
-};
-
-
-export type QueryGetCommentsArgs = {
-  postId: Scalars['String'];
 };
 
 
@@ -231,7 +226,7 @@ export type UsernamePasswordInput = {
 
 export type CommentFieldsFragment = { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined };
 
-export type CommentRespFragment = { __typename?: 'CommentResponse', hasMore: boolean, comment: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } };
+export type CommentRespFragment = { __typename?: 'CommentResponse', hasMore?: boolean | null | undefined, comment?: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } | null | undefined };
 
 export type PostSnippetFragment = { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, title: string, points: number, textSnippet: string, voteStatus?: number | null | undefined, creator?: { __typename?: 'User', username: string, id: string } | null | undefined };
 
@@ -313,13 +308,6 @@ export type VoteMutationVariables = Exact<{
 
 export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
 
-export type GetCommentsQueryVariables = Exact<{
-  postId: Scalars['String'];
-}>;
-
-
-export type GetCommentsQuery = { __typename?: 'Query', getComments: Array<{ __typename?: 'CommentResponse', hasMore: boolean, children: Array<{ __typename?: 'CommentResponse', hasMore: boolean, children: Array<{ __typename?: 'CommentResponse', hasMore: boolean, children: Array<{ __typename?: 'CommentResponse', hasMore: boolean, children: Array<{ __typename?: 'CommentResponse', hasMore: boolean, comment: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } }>, comment: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } }>, comment: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } }>, comment: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } }>, comment: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } }> };
-
 export type GetUserQueryVariables = Exact<{
   uuid: Scalars['String'];
 }>;
@@ -337,7 +325,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, voteStatus?: number | null | undefined, title: string, text: string, savedStatus?: string | null | undefined, points: number, creator?: { __typename?: 'User', id: string, username: string } | null | undefined } | null | undefined };
+export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id: string, createdAt: string, updatedAt: string, voteStatus?: number | null | undefined, title: string, text: string, savedStatus?: string | null | undefined, points: number, creator?: { __typename?: 'User', id: string, username: string } | null | undefined, comments?: Array<{ __typename?: 'CommentResponse', hasMore?: boolean | null | undefined, children?: Array<{ __typename?: 'CommentResponse', hasMore?: boolean | null | undefined, children?: Array<{ __typename?: 'CommentResponse', hasMore?: boolean | null | undefined, children?: Array<{ __typename?: 'CommentResponse', hasMore?: boolean | null | undefined, children?: Array<{ __typename?: 'CommentResponse', hasMore?: boolean | null | undefined, comment?: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } | null | undefined }> | null | undefined, comment?: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } | null | undefined }> | null | undefined, comment?: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } | null | undefined }> | null | undefined, comment?: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } | null | undefined }> | null | undefined, comment?: { __typename?: 'Comment', id: string, createdAt: string, updatedAt: string, text: string, creatorId: string, parentId?: string | null | undefined, postId: string, isDeleted: boolean, creator?: { __typename?: 'User', username: string, id: string } | null | undefined } | null | undefined }> | null | undefined } | null | undefined };
 
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
@@ -525,29 +513,6 @@ export const VoteDocument = gql`
 export function useVoteMutation() {
   return Urql.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument);
 };
-export const GetCommentsDocument = gql`
-    query GetComments($postId: String!) {
-  getComments(postId: $postId) {
-    ...CommentResp
-    children {
-      ...CommentResp
-      children {
-        ...CommentResp
-        children {
-          ...CommentResp
-          children {
-            ...CommentResp
-          }
-        }
-      }
-    }
-  }
-}
-    ${CommentRespFragmentDoc}`;
-
-export function useGetCommentsQuery(options: Omit<Urql.UseQueryArgs<GetCommentsQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetCommentsQuery>({ query: GetCommentsDocument, ...options });
-};
 export const GetUserDocument = gql`
     query GetUser($uuid: String!) {
   getUser(uuid: $uuid) {
@@ -593,9 +558,24 @@ export const PostDocument = gql`
       username
     }
     points
+    comments {
+      ...CommentResp
+      children {
+        ...CommentResp
+        children {
+          ...CommentResp
+          children {
+            ...CommentResp
+            children {
+              ...CommentResp
+            }
+          }
+        }
+      }
+    }
   }
 }
-    `;
+    ${CommentRespFragmentDoc}`;
 
 export function usePostQuery(options: Omit<Urql.UseQueryArgs<PostQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<PostQuery>({ query: PostDocument, ...options });
