@@ -1,25 +1,22 @@
 import { Button } from "@chakra-ui/button";
-import { Box, Flex, Heading, Link, Stack, Text } from "@chakra-ui/layout";
+import { Box, Flex, Heading, Link, Text } from "@chakra-ui/layout";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
+import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { ReactElement, useState } from "react";
+import validator from "validator";
+import { CommentStack } from "../../components/CommentStack";
 import { InputField } from "../../components/InputField";
 import { Layout } from "../../components/Layout";
 import { PostActionsDropdownMenu } from "../../components/PostActionsDropdownMenu";
 import { PostPointsDisplay } from "../../components/PostPointsDisplay";
 import {
     CommentResponse,
-    useGetCommentsQuery,
     usePostQuery,
-    useUpdatePostMutation,
+    useUpdatePostMutation
 } from "../../generated/graphql";
 import { createURQLClient } from "../../utils/createURQLClient";
-import getQueryParam from "../../utils/getQueryParam";
-import NextLink from "next/link";
-import { CommentCard } from "../../components/CommentCard";
-import { CommentStack } from "../../components/CommentStack";
-import validator from "validator";
 const Post: React.FC = ({}) => {
     const [{ fetching: uFetching }, updatePost] = useUpdatePostMutation();
     const router = useRouter();
@@ -36,27 +33,7 @@ const Post: React.FC = ({}) => {
             id: postId as string,
         },
     });
-    const [{ data: cdata, fetching: cfetching, error: cerror }] =
-        useGetCommentsQuery({
-            pause: postId === "-1",
-            variables: {
-                postId,
-            },
-        });
     let comments: ReactElement;
-    if (cfetching) {
-        comments = <p>loading comments...</p>;
-    }
-    if (cerror) {
-        comments = <p>{cerror.message}</p>;
-    }
-    if (!cfetching && !error) {
-        if (!cdata) {
-            comments = <p>there are no comments on this post</p>;
-        } else {
-            comments = <CommentStack comments={cdata.getComments as CommentResponse[]} depth={0} />;
-        }
-    }
     if (fetching) {
         return <div>loading...</div>;
     }
@@ -67,6 +44,7 @@ const Post: React.FC = ({}) => {
         if (!data) {
             return <div>post doesn't exist</div>;
         } else {
+            comments = data.post.comments.length ? <CommentStack comments={data.post.comments as CommentResponse[]} depth={0} /> : <Text>there are no comments yet...</Text>
             return (
                 <Layout showNav>
                     <Box
@@ -75,7 +53,7 @@ const Post: React.FC = ({}) => {
                         shadow="md"
                         sx={data.post.savedStatus ? { boxShadow: '0px 0px 3px 3px var(--chakra-colors-green-500)' } : {}}
                         p={3}
-                        mb={4}
+                        mb={2}
                     >
                         <Flex justifyContent="space-between">
                             <PostPointsDisplay post={data.post} />
@@ -145,8 +123,8 @@ const Post: React.FC = ({}) => {
                             </Box>
                         </Flex>
                     </Box>
-                    <Text>{data.post.savedStatus ? data.post.savedStatus : "nope"}</Text>
-                    <>{comments}</>
+                    <Text fontSize="2xl">comments:</Text>
+                    {comments}
                 </Layout>
             );
         }

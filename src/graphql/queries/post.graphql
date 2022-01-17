@@ -1,5 +1,5 @@
 query Post($id: String!) {
-    post (id: $id) {
+    post(id: $id) {
         id
         createdAt
         updatedAt
@@ -12,5 +12,20 @@ query Post($id: String!) {
             username
         }
         points
+        comments {
+            ...CommentResp
+            children {
+                ...CommentResp
+                children {
+                    ...CommentResp
+                    children {
+                        ...CommentResp
+                        children {
+                            ...CommentResp
+                        }
+                    }
+                }
+            }
+        }
     }
 }
