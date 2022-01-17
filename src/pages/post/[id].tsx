@@ -9,6 +9,7 @@ import { Layout } from "../../components/Layout";
 import { PostActionsDropdownMenu } from "../../components/PostActionsDropdownMenu";
 import { PostPointsDisplay } from "../../components/PostPointsDisplay";
 import {
+    CommentResponse,
     useGetCommentsQuery,
     usePostQuery,
     useUpdatePostMutation,
@@ -53,8 +54,7 @@ const Post: React.FC = ({}) => {
         if (!cdata) {
             comments = <p>there are no comments on this post</p>;
         } else {
-            console.log(cdata.getComments);
-            comments = <CommentStack comments={cdata.getComments} />;
+            comments = <CommentStack comments={cdata.getComments as CommentResponse[]} depth={0} />;
         }
     }
     if (fetching) {
@@ -73,7 +73,7 @@ const Post: React.FC = ({}) => {
                         key={data.post.id}
                         borderWidth="1px"
                         shadow="md"
-                        sx={data.post.savedStatus ? { boxShadow: '0px 0px 3px 3px var(--chakra-colors-green-500)' } : ""}
+                        sx={data.post.savedStatus ? { boxShadow: '0px 0px 3px 3px var(--chakra-colors-green-500)' } : {}}
                         p={3}
                         mb={4}
                     >
